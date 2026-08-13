@@ -57,12 +57,17 @@ public class EmployeeService {
             return employeeRepository.findBySalaryBetween(minSalary,maxSalary);
         }
 
-//        public EmployeeResponseDto salaryIncrement(Long id,SalaryIncrementDto percentage) {
-//            Employee existingEmployee = employeeRepository.findById(id).
-//                    orElseThrow(()-> new EmployeeNotFoundException("Employee with this id "+id+" not found"));
-//
-//            BigDecimal salary = existingEmployee.getSalary();
-//        }
+        public EmployeeResponseDto salaryIncrement(Long id,SalaryIncrementDto percentage) {
+            Employee existingEmployee = employeeRepository.findById(id).
+                    orElseThrow(()-> new EmployeeNotFoundException("Employee with this id "+id+" not found"));
+
+            BigDecimal percent = percentage.getPercentage();
+            BigDecimal salaryIncrement= BigDecimal.ONE.add(percent.divide(BigDecimal.valueOf(100)));
+            BigDecimal increasedSalary=salaryIncrement.multiply(existingEmployee.getSalary());
+            existingEmployee.setSalary(increasedSalary);
+            employeeRepository.save(existingEmployee);
+            return mapToDto(existingEmployee);
+        }
 
         private EmployeeResponseDto mapToDto(Employee response) {
             EmployeeResponseDto responseDto = new EmployeeResponseDto();

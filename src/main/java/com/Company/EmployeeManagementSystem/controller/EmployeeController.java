@@ -56,7 +56,10 @@ public class EmployeeController {
 
     }
     @PatchMapping("/{id}/salary")
-    public ResponseEntity<EmployeeResponseDto> increaseSalary(@RequestBody SalaryIncrementDto percentage, @PathVariable String id) {
+    public ResponseEntity<EmployeeResponseDto> increaseSalary(@RequestBody SalaryIncrementDto percentage, @PathVariable Long id) {
         EmployeeResponseDto response = employeeService.salaryIncrement(id,percentage);
+        return ResponseEntity.status(
+                HttpStatus.OK
+        ).body(response);
     }
 }
